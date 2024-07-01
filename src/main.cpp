@@ -36,7 +36,7 @@ void setup() {
   xTaskCreate(mqtt_entry, "MQTT_SERVICE", 8192, NULL, 1, NULL);
   xTaskCreate(sensor_entry, "SENSOR_DATA", 2000, NULL, 1, NULL);
   xTaskCreate(gps_entry, "SENSOR_SERVICE", 2000, NULL, 1, NULL);
-  Serial.println("Hello");
+  
 }
 
 
