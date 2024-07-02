@@ -65,6 +65,24 @@ void handleSetConfig(void) {
   }
 }
 
+void HTMLhandleConfig(void) {
+  String html = "<html><body><h1>Configure WiFi</h1>"; 
+  html += "<form method='POST' action='/saveConfig'>";
+  html += "<br><label for='ssid'>WIFI SSID:</label>";
+  html += "<input type='text' id='ssid' name='ssid' required><br>";
+  html += "<br><label for='password'>WIFI Password:</label>";
+  html += "<input type='password' id='password' name='password' required><br>";
+  html += "<br><label for='MQTT_SERVER_H'>MQTT Server:</label>";
+  html += "<input type='text' id='MQTT_SERVER_H' name='MQTT_SERVER_H' required><br>";
+  html += "<br><label for='MQTT_PORT_H'>MQTT Port:</label>";
+  html += "<input type='number' id='MQTT_PORT_H' name='MQTT_PORT_H' required><br>";
+  html += "<br><label for='MQTT_TOKEN_H'>MQTT Token:</label>";
+  html += "<input type='text' id='MQTT_TOKEN_H' name='MQTT_TOKEN_H' required><br>";
+  html += "<br><input type='submit' value='Save'><br>";
+  html += "</form></body></html>";
+  server.send(200, "text/html", html);
+}
+
 void HTMLhandleSaveConfig(void) {
   String AP_ssid = server.arg("ssid");
   String AP_password = server.arg("password");
@@ -82,26 +100,7 @@ void HTMLhandleSaveConfig(void) {
 
   delay(1000);
   configSaved = false;
-  ESP.restart();
-}
-
-void HTMLhandleConfig(void) {
-  String html = "<html><body><h1>Configure WiFi</h1>"; 
-  html += "<form method='POST' action='/saveConfig'>";
-  html += "<br><label for='ssid'>WIFI SSID:</label>";
-  html += "<input type='text' id='ssid' name='ssid' required><br>";
-  html += "<br><label for='password'>WIFI Password:</label>";
-  html += "<input type='password' id='password' name='password' required><br>";
-  html += "<br><label for='MQTT_SERVER_H'>MQTT Server:</label>";
-  html += "<input type='text' id='MQTT_SERVER_H' name='MQTT_SERVER_H' required><br>";
-  html += "<br><label for='MQTT_PORT_H'>MQTT Port:</label>";
-  html += "<input type='number' id='MQTT_PORT_H' name='MQTT_PORT_H' required><br>";
-  html += "<br><label for='MQTT_TOKEN_H'>MQTT Token:</label>";
-  html += "<input type='text' id='MQTT_TOKEN_H' name='MQTT_TOKEN_H' required><br>";
-  html += "<br><input type='submit' value='Save'><br>";
-  html += "</form></body></html>";
-  server.send(200, "text/html", html);
-  HTMLhandleSaveConfig();
+  
 }
 
 void setupAP(void) {
@@ -111,7 +110,7 @@ void setupAP(void) {
   Serial.println(IP);
 
   server.on("/", HTMLhandleConfig);
-  //server.on("/saveConfig", HTTP_POST, HTMLhandleSaveConfig);
+  server.on("/saveConfig", HTTP_POST, HTMLhandleSaveConfig);
   server.on("/getConfig", HTTP_GET, handleGetConfig);
   server.on("/setConfig", HTTP_POST, handleSetConfig);
   server.begin();
