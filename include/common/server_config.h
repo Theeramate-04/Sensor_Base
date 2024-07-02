@@ -3,5 +3,6 @@
 
 void handleGetConfig();
 void handleSetConfig();
+void HTMLhandleConfig();
 
 #endif 

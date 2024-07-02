@@ -61,3 +61,21 @@ void handleSetConfig() {
     server.send(400, "application/json", "{\"error\":\"Missing JSON body\"}");
   }
 }
+
+void HTMLhandleConfig() {
+  String html = "<html><body><h1>Configure WiFi</h1>"; 
+  html += "<form method='POST' action='/saveConfig'>";
+  html += "<br><label for='ssid'>WIFI SSID:</label>";
+  html += "<input type='text' id='ssid' name='ssid'><br>";
+  html += "<br><label for='password'>WIFI Password:</label>";
+  html += "<input type='password' id='password' name='password'><br>";
+  html += "<br><label for='MQTT_SERVER_H'>MQTT Server:</label>";
+  html += "<input type='text' id='MQTT_SERVER_H' name='MQTT_SERVER_H'><br>";
+  html += "<br><label for='MQTT_PORT_H'>MQTT Port:</label>";
+  html += "<input type='number' id='MQTT_PORT_H' name='MQTT_PORT_H'><br>";
+  html += "<br><label for='MQTT_TOKEN_H'>MQTT Token:</label>";
+  html += "<input type='text' id='MQTT_TOKEN_H' name='MQTT_TOKEN_H'><br>";
+  html += "<br><input type='submit' value='Save'><br>";
+  html += "</form></body></html>";
+  server.send(200, "text/html", html);
+}
