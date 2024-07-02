@@ -112,4 +112,7 @@ void setupAP() {
   server.on("/setConfig", HTTP_POST, handleSetConfig);
   server.begin();
   Serial.println("HTTP server started");
+  while (WiFi.softAPgetStationNum() == 0) {
+    delay(100); 
+  }
 }
