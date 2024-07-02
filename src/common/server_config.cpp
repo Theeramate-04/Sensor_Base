@@ -13,6 +13,8 @@
 WebServer server(80);
 Config config;
 
+volatile bool configSaved = false;
+
 void handleGetConfig() {
   JsonDocument doc;
   doc["WIFI_SSID"] = config.WIFI_SSID_Config;
@@ -97,6 +99,7 @@ void HTMLhandleSaveConfig() {
   server.send(200, "text/html", "Config saved! Rebooting...");
 
   delay(1000);
+  configSaved = true;
   ESP.restart();
 }
 
@@ -112,7 +115,5 @@ void setupAP() {
   server.on("/setConfig", HTTP_POST, handleSetConfig);
   server.begin();
   Serial.println("HTTP server started");
-  while (WiFi.softAPgetStationNum() == 0) {
-    delay(100); 
-  }
+  while (configSaved) {delay(100);}
 }
