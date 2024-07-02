@@ -15,7 +15,7 @@ Config config;
 
 volatile bool configSaved = false;
 
-void handleGetConfig() {
+void handleGetConfig(void) {
   JsonDocument doc;
   doc["WIFI_SSID"] = config.WIFI_SSID_Config;
   doc["WIFI_PWD"] = config.WIFI_PWD_Config;
@@ -29,7 +29,7 @@ void handleGetConfig() {
   server.send(200, "application/json", response);
 }
 
-void handleSetConfig() {
+void handleSetConfig(void) {
     if (server.hasArg("plain")) {
     String body = server.arg("plain");
     JsonDocument doc;
@@ -65,7 +65,7 @@ void handleSetConfig() {
   }
 }
 
-void HTMLhandleConfig() {
+void HTMLhandleConfig(void) {
   String html = "<html><body><h1>Configure WiFi</h1>"; 
   html += "<form method='POST' action='/saveConfig'>";
   html += "<br><label for='ssid'>WIFI SSID:</label>";
@@ -83,7 +83,7 @@ void HTMLhandleConfig() {
   server.send(200, "text/html", html);
 }
 
-void HTMLhandleSaveConfig() {
+void HTMLhandleSaveConfig(void) {
   String AP_ssid = server.arg("ssid");
   String AP_password = server.arg("password");
   String MQTT_server = server.arg("MQTT_SERVER_H");
@@ -103,7 +103,7 @@ void HTMLhandleSaveConfig() {
   ESP.restart();
 }
 
-void setupAP() {
+void setupAP(void) {
   WiFi.softAP(FSP32_SSID, ESP32_PWD);
   IPAddress IP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
