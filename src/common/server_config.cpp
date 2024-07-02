@@ -13,7 +13,7 @@
 WebServer server(80);
 Config config;
 
-volatile bool configSaved = false;
+volatile bool configSaved = true;
 
 void handleGetConfig(void) {
   JsonDocument doc;
@@ -81,7 +81,7 @@ void HTMLhandleSaveConfig(void) {
   server.send(200, "text/html", "Config saved! Rebooting...");
 
   delay(1000);
-  configSaved = true;
+  configSaved = false;
   ESP.restart();
 }
 
