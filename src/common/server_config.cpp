@@ -5,6 +5,7 @@
 #include <WebServer.h>
 #include <ArduinoJson.h>
 
+#include "cfg/host.h"
 #include "common/msg_util.h"
 #include "common/nvs_function.h"
 #include "common/server_config.h"
@@ -66,16 +67,49 @@ void HTMLhandleConfig() {
   String html = "<html><body><h1>Configure WiFi</h1>"; 
   html += "<form method='POST' action='/saveConfig'>";
   html += "<br><label for='ssid'>WIFI SSID:</label>";
-  html += "<input type='text' id='ssid' name='ssid'><br>";
+  html += "<input type='text' id='ssid' name='ssid' required><br>";
   html += "<br><label for='password'>WIFI Password:</label>";
-  html += "<input type='password' id='password' name='password'><br>";
+  html += "<input type='password' id='password' name='password' required><br>";
   html += "<br><label for='MQTT_SERVER_H'>MQTT Server:</label>";
-  html += "<input type='text' id='MQTT_SERVER_H' name='MQTT_SERVER_H'><br>";
+  html += "<input type='text' id='MQTT_SERVER_H' name='MQTT_SERVER_H' required><br>";
   html += "<br><label for='MQTT_PORT_H'>MQTT Port:</label>";
-  html += "<input type='number' id='MQTT_PORT_H' name='MQTT_PORT_H'><br>";
+  html += "<input type='number' id='MQTT_PORT_H' name='MQTT_PORT_H' required><br>";
   html += "<br><label for='MQTT_TOKEN_H'>MQTT Token:</label>";
-  html += "<input type='text' id='MQTT_TOKEN_H' name='MQTT_TOKEN_H'><br>";
+  html += "<input type='text' id='MQTT_TOKEN_H' name='MQTT_TOKEN_H' required><br>";
   html += "<br><input type='submit' value='Save'><br>";
   html += "</form></body></html>";
   server.send(200, "text/html", html);
+}
+
+void HTMLhandleSaveConfig() {
+  String AP_ssid = server.arg("ssid");
+  String AP_password = server.arg("password");
+  String MQTT_server = server.arg("MQTT_SERVER_H");
+  String MQTT_port = server.arg("MQTT_PORT_H");
+  String MQTT_token = server.arg("MQTT_TOKEN_H");
+
+  NVS_Write("WIFI_SSID_S", AP_ssid.c_str());
+  NVS_Write("WIFI_PWD_S",  AP_password.c_str());
+  NVS_Write("MQTT_SERVER_S", MQTT_server.c_str());
+  NVS_Write("MQTT_PORT_S", MQTT_port.toInt());
+  NVS_Write("MQTT_TOKEN_S",  MQTT_token.c_str());
+
+  server.send(200, "text/html", "Config saved! Rebooting...");
+
+  delay(1000);
+  ESP.restart();
+}
+
+void setupAP() {
+  WiFi.softAP(FSP32_SSID, ESP32_PWD);
+  IPAddress IP = WiFi.softAPIP();
+  Serial.print("AP IP address: ");
+  Serial.println(IP);
+
+  server.on("/", HTMLhandleConfig);
+  server.on("/saveConfig", HTTP_POST, HTMLhandleSaveConfig);
+  server.on("/getConfig", HTTP_GET, handleGetConfig);
+  server.on("/setConfig", HTTP_POST, handleSetConfig);
+  server.begin();
+  Serial.println("HTTP server started");
 }

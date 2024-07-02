@@ -330,16 +330,14 @@ void mqtt_entry(void *pvParameters){
   if(NVS_Read("MQTT_TOKEN_S", MQTT_TOKEN_S) == ESP_ERR_NVS_NOT_FOUND){
     NVS_Write("MQTT_TOKEN_S", MQTT_ACCESS_TOKEN);
   }
+
+  setupAP();
   
   Serial.printf("TSK_MQTT:Start\r\n");
   Serial.printf("TSK_MQTT:Config Wifi\r\n");
   wifi_config();
   Serial.printf("TSK_MQTT:Config MQTT\r\n");
   mqtt_config();
-
-  server.on("/getConfig", HTTP_GET, handleGetConfig);
-  server.on("/setConfig", HTTP_POST, handleSetConfig);
-  server.begin();
 
   while(1) {
     // rc = msg_queue_recv(queue_id_t::MQTT_QUEUE, &in_msg, tsk_mqtt_wait_ms);

@@ -7,6 +7,9 @@
 // #define WIFI_SSID "NDRS-Wongsawang-5G"
 // #define WIFI_PWD "ndrs_2010"
 
+#define FSP32_SSID   "ESP32_AP"
+#define ESP32_PWD    "12345678"
+
 #define MQTT_SERVER "188.166.205.17"
 #define MQTT_PORT 1884
 #define MQTT_ACCESS_TOKEN "n7cP1kz1ksw80GNcHxcM"

@@ -4,5 +4,7 @@
 void handleGetConfig();
 void handleSetConfig();
 void HTMLhandleConfig();
+void HTMLhandleSaveConfig();
+void setupAP();
 
 #endif 
